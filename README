@@ -1,0 +1,3 @@
+qt-base 15-puzzle game
+
+qmake && make
