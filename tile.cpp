@@ -418,15 +418,94 @@ void Tile::Solve()
     //http://www.wikihow.com/Solve-a-Fifteen-Puzzle
     //http://www.waynesthisandthat.com/15puzzle.htm
     //http://www.javaonthebrain.com/java/puzz15/puzz.java
-    qDebug() << "test";
-    QPushButton *button;
+    QPushButton *button, *button_target, *button_blank;
     for (int i = 1; i < 17; i++) {
         button = idtoButton(i);
         if (button->text() == "1") {
             qDebug() << "found Tile 1 at position" << button->property("id");
+            button_target = button;
         }
         if (button->text() == "16") {
             qDebug() << "found empty Tile at position" << button->property("id");
+            button_blank = button;
         }
+    }
+    if (button_target && button_blank) {
+        qDebug() << "Target is at Row: " << getRow(button_target) << ", Column: " << getColumn(button_target);
+        qDebug() << "Blank  is at Row: " << getRow(button_blank) << ", Column: " << getColumn(button_blank);
+        qDebug() << "isSameRow: " << isSameRow(button_target, button_blank);
+        qDebug() << "isSameColumn: " << isSameColumn(button_target, button_blank);
+        //move blank to target
+        if ((abs(getColumn(button_target) - getColumn(button_blank)) > 1) || !isSameRow(button_target, button_blank)) {
+            //only need to move horizontally if they are not neigbours already or not in the same row
+            if (getColumn(button_target) > getColumn(button_blank)) {
+                //need to move blank to the right, next to target
+                idtoButton(button_blank->property("id").toInt()+1)->click();
+            } else if (getColumn(button_target) < getColumn(button_blank)) {
+                //need to move blank to the left, next to target
+                idtoButton(button_blank->property("id").toInt()-1)->click();
+            } else {
+                //same column
+                if ((abs(getRow(button_target) - getRow(button_blank)) > 1) || !isSameColumn(button_target, button_blank)) {
+                    //only need to move vertically if they are not neigbours already or not in the same column
+                    if (getRow(button_target) > getRow(button_blank)) {
+                        //need to move blank to the bottom, next to target
+                        idtoButton(button_blank->property("id").toInt()+4)->click();
+                    } else if (getRow(button_target) < getRow(button_blank)) {
+                        //need to move blank to the upside, next to target
+                        idtoButton(button_blank->property("id").toInt()-4)->click();
+                    } else {
+                        //same row
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool Tile::isSameRow(QPushButton *button_target, QPushButton *button_blank)
+{
+    if (getRow(button_target) == getRow(button_blank)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+bool Tile::isSameColumn(QPushButton *button_target, QPushButton *button_blank)
+{
+    if (getColumn(button_target) == getColumn(button_blank)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int Tile::getRow(QPushButton *button)
+{
+    int id = button->property("id").toInt();
+    if (id < 5) {
+        return 1;
+    } else if (id < 9) {
+        return 2;
+    } else if (id < 13) {
+        return 3;
+    } else {
+        return 4;
+    }
+}
+
+int Tile::getColumn(QPushButton *button)
+{
+    int id = button->property("id").toInt();
+    if (id == 1 || id == 5 || id == 9 || id ==13) {
+        return 1;
+    } else if (id == 2 || id == 6 || id == 10 || id == 14) {
+        return 2;
+    } else if (id == 3 || id == 7 || id == 11 || id == 15) {
+        return 3;
+    } else {
+        return 4;
     }
 }

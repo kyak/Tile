@@ -38,6 +38,10 @@ public slots:
     bool isSolved();
     void updateMoves();
     void Solve();
+    bool isSameRow(QPushButton *button_target, QPushButton *button_blank);
+    int getRow(QPushButton *button);
+    bool isSameColumn(QPushButton *button_target, QPushButton *button_blank);
+    int getColumn(QPushButton *button);
 
 protected:
     void changeEvent(QEvent *e);
