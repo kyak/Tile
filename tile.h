@@ -37,6 +37,7 @@ public slots:
     void keyDown(QPushButton *button);
     bool isSolved();
     void updateMoves();
+    void Solve();
 
 protected:
     void changeEvent(QEvent *e);

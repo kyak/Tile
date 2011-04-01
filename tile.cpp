@@ -299,16 +299,33 @@ void Tile::keyPressEvent(QKeyEvent *event)
 {
    if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Q) {
        Quit();
+   } else if (event->key() == Qt::Key_S) {
+       Shuffle();
+   } else if (event->key() == Qt::Key_R) {
+       Reset();
+   } else if (event->key() == Qt::Key_H) {
+       Help();
+   } else if (event->key() == Qt::Key_O) {
+       Solve();
    } else if (event->key() == Qt::Key_Up) {
        //focusNextChild();
        //qDebug() << qApp->focusWidget();
        QPushButton *button = qobject_cast< QPushButton* >(qApp->focusWidget());
-       keyUp(button);
+       if (button) {
+          keyUp(button);
+       }
    } else if (event->key() == Qt::Key_Down) {
        //focusPreviousChild();
        //qDebug() << qApp->focusWidget();
        QPushButton *button = qobject_cast< QPushButton* >(qApp->focusWidget());
-       keyDown(button);
+       if (button) {
+           keyDown(button);
+       }
+   } else if( event->key() == Qt::Key_Return ) {
+       QPushButton *button = qobject_cast< QPushButton* >(qApp->focusWidget());
+       if (button) {
+           button->click();
+       }
    } else {
        return;
    }
@@ -393,4 +410,23 @@ void Tile::updateMoves()
 {
     QString mooves;
     ui->moves->setText("Moves:\n"+mooves.setNum(Moves));
+}
+
+void Tile::Solve()
+{
+    //hm-hm.
+    //http://www.wikihow.com/Solve-a-Fifteen-Puzzle
+    //http://www.waynesthisandthat.com/15puzzle.htm
+    //http://www.javaonthebrain.com/java/puzz15/puzz.java
+    qDebug() << "test";
+    QPushButton *button;
+    for (int i = 1; i < 17; i++) {
+        button = idtoButton(i);
+        if (button->text() == "1") {
+            qDebug() << "found Tile 1 at position" << button->property("id");
+        }
+        if (button->text() == "16") {
+            qDebug() << "found empty Tile at position" << button->property("id");
+        }
+    }
 }
